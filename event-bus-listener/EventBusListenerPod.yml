@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: event-bus-listener-ms
+  labels:
+    app: event-bus-listener-ms
+spec:
+  nodeName: minikube
+  containers:
+    - name: event-bus-listener
+      # get latest version of image
+      image: event-bus-listener
+      # imagePullPolicy: IfNotPresent
+      imagePullPolicy: Never
+      env:
+        - name: PORT
+          value: "8096"
+        # the Zookeeper cluster is exposed through the service known as zookeeper-service.kafka-ca1 within the Minikube cluster
+        - name: KAFKA_HOST
+          value: "kafka.kafka-ca1"
+        - name: ZOOKEEPER_PORT
+          value: "9092"
+        - name: KAFKA_TOPIC
+          value: "event-bus"
+      ports:
+        # containerPort is the port exposed by the container (where nodejs express api is listening)
+        - containerPort: 8096
