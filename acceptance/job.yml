@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: acceptance-test-job
+  labels:
+    app: acceptance-test-job
+spec:
+  template:
+    metadata:
+      labels:
+        app: acceptance-test-job
+    spec:
+      serviceAccountName: acceptance-test-job
+      containers:
+        - name: acceptance
+          # get latest version of image
+          image: acceptance
+          # imagePullPolicy: IfNotPresent
+          # for local dev
+          imagePullPolicy: Never
+          env:
+            - name: KAFKA_HOST
+              value: "kafka.kafka-ca1"
+            - name: ZOOKEEPER_PORT
+              value: "9092"
+            - name: KAFKA_TOPIC
+              value: "event-bus"
+      restartPolicy: Never
+  backoffLimit: 0
